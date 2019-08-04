@@ -3,6 +3,7 @@
 #include <array>
 #include <vector>
 #include <iostream>
+#include <functional>
 #include "application.h"
 
 enum class WallP{Top=0,Left,Bottom,Right};
@@ -127,15 +128,26 @@ struct Cell{
 };
 
 struct CurrentCell{
-    Cell* cell{};
-    void set(Cell& cell_p){
-        if (cell){
-            cell->setCurrent(false);
-        }
-        cell = &cell_p;
-        cell->setCurrent(true);
-        cell->setVisited();
+    //todo use constructor to set the first current cell
+
+    std::reference_wrapper<Cell> m_cell;
+
+    CurrentCell(Cell& cell):m_cell(cell)
+    {
+        m_cell.get().setCurrent(true);
+        m_cell.get().setVisited();
     }
+
+    void set(Cell& cell_p){
+
+        m_cell.get().setCurrent(false);
+
+        m_cell = cell_p;
+        m_cell.get().setCurrent(true);
+        m_cell.get().setVisited();
+    }
+
+    Cell& cell(){return m_cell;}
 };
 
 //void breakWall(Cell& a, Cell& b){
@@ -143,20 +155,34 @@ struct CurrentCell{
 //}
 
 
-class MazelGenerator:public Application
+class MazeGenerator:public Application
 {
     std::vector<Cell> cells;
     CurrentCell current;
 public:
-    MazelGenerator(){
+    MazeGenerator()
+        :cells{make_grid()}
+        ,current(cells.at(0)){
+
+
+    }
+
+    std::vector<Cell> make_grid(){
+        std::vector<Cell> grid;
         for(int i= 0;i< CELL_COL_NUMBER;i++){
             for(int j= 0;j< CELL_ROW_NUMBER;j++){
-                cells.emplace_back(i,j);
+                grid.emplace_back(i,j);
             }
         }
-        current.set(cells.at(0));
+        return grid;
     }
-    virtual ~MazelGenerator()=default;
+
+
+    virtual ~MazeGenerator()=default;
+
+    Cell& FindUnvisitedNeighbor(){
+
+    }
 
 
     void draw(Canvas *canvas)
