@@ -12,6 +12,15 @@ enum class WallP{Top=0,Left,Bottom,Right};
 struct Point{
     int x,y;
 };
+struct GridPosition{
+    int column;
+    int row;
+};
+
+struct GridSize{
+    int column;
+    int row;
+};
 
 struct Wall{
     int col,row;
@@ -57,10 +66,14 @@ struct Cell{
     void setCurrent(bool c){m_current = c;}
     bool current()const{return m_current;}
 
-    void forEach(std::function<void(const Wall&wall_p,WallP)>cb)const{
+    void forEachWall(std::function<void(const Wall&wall_p,WallP)>cb)const{
         for(int index:range(m_walls.size()) ){
             cb(m_walls.at(index),static_cast<WallP>(index));
         }
+    }
+
+    void forEachNeighbor(const std::vector<Cell>& grid,std::function<void(Cell&)> cb){
+
     }
 
     void remove(WallP wall_p){
@@ -90,54 +103,102 @@ struct CurrentCell{
     }
 
     Cell& cell(){return m_cell;}
+    const Cell& cell()const{return m_cell;}
 };
 
-
-struct MazeGenerator{
-
-    const int m_nb_row ;
-    const int m_nb_col;
-    std::vector<Cell> cells;
-    CurrentCell m_current;
-    int m_iteration = 0;
+class Grid{
+    GridSize m_size;
+    std::vector<Cell> m_cells;
 public:
-    MazeGenerator(int nb_row,int nb_col)
-        :m_nb_row(nb_row)
-        ,m_nb_col(nb_col)
-        ,cells{make_grid()}
-        ,m_current(cells.at(0)){
+    Grid(GridSize size)
+        :m_size(size)
+        ,m_cells(make_grid()){
+
     }
-
-    const CurrentCell& current()const{return m_current;}
-
-
-    void step(){
-        if(m_iteration<cells.size()-1) m_iteration++;
-        m_current.set(cells.at(m_iteration));
-    }
-
-    bool finished()const{
-        return m_iteration == cells.size()-1;
-    }
-
-
-    void forEach(std::function<void(const Cell&)> cb){
-        for(const auto & cell:cells){
-            for(int j= 0;j< m_nb_row;j++){
-                cb(cell);
-            }
-        }
+    Cell& first(){
+        return m_cells.at(0);
     }
 
     std::vector<Cell> make_grid()const{
         std::vector<Cell> grid;
-        for(int i= 0;i< m_nb_col;i++){
-            for(int j= 0;j< m_nb_row;j++){
+        for(int i= 0;i< m_size.column;i++){
+            for(int j= 0;j< m_size.column;j++){
                 grid.emplace_back(i,j);
             }
         }
         return grid;
     }
+
+    void forEach(std::function<void(const Cell&)> cb)const{
+        for(const auto & cell:m_cells){
+             cb(cell);
+        }
+    }
+
+    void forEachNeighbor(const Cell& cell_p,std::function<void(Cell&)> cb){
+        for(auto & cell:m_cells){
+             cb(cell);
+        }
+    }
+};
+
+#include <stack>
+struct MazeGenerator{
+
+
+    Grid m_grid;
+    CurrentCell m_current;
+    std::stack<std::reference_wrapper<Cell>> m_stack;
+    bool m_finished{false};
+
+public:
+    MazeGenerator(GridSize size_p)
+        :m_grid{size_p}
+        ,m_current(m_grid.first())
+    {
+    }
+
+    const CurrentCell& current()const{return m_current;}
+
+
+    std::vector<std::reference_wrapper<Cell>> unvisitedNeighbors(){
+
+        std::vector<std::reference_wrapper<Cell>> ret;
+
+
+        m_grid.forEachNeighbor(m_current.cell(), [ &ret ] (Cell& cell_p){
+            if(!cell_p.visited())  ret.push_back(cell_p);
+        });
+
+        return ret;
+    }
+
+    void step(){
+
+       auto neighbors = unvisitedNeighbors();
+        if( ! neighbors.empty()){
+            auto& next  = neighbors.front();
+            m_stack.push(next);
+            m_current.set(next);
+        }else if(m_stack.size()){
+            auto & previous = m_stack.top();
+            m_stack.pop();
+            m_current.set(previous);
+        }else{
+            m_finished = true;
+        }
+
+    }
+
+    bool finished()const{
+        return m_finished;
+    }
+
+
+    void forEach(std::function<void(const Cell&)> cb){
+        m_grid.forEach(cb);
+    }
+
 
 
 };

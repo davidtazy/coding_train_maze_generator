@@ -17,12 +17,14 @@ void draw(const Cell& cell_p,Canvas* canvas,int col_number,int row_number);
 
 class MazeApplication:public Application
 {
-    const int CELL_ROW_NUMBER = 10;
-    const int CELL_COL_NUMBER = 10;
+    const int CELL_ROW_NUMBER = 5;
+    const int CELL_COL_NUMBER = 5;
     MazeGenerator generator;
 public:
     MazeApplication()
-        :generator(CELL_ROW_NUMBER,CELL_COL_NUMBER){
+        :generator({CELL_ROW_NUMBER,CELL_COL_NUMBER})
+    {
+
     }
 
     virtual ~MazeApplication()=default;
@@ -32,7 +34,7 @@ protected:
     void draw(Canvas *canvas)override
     {
         if(generator.finished()){
-            std::cout<<"Finished\n";
+
             canvas->noLoop();
         }else{
 

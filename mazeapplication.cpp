@@ -19,7 +19,7 @@ void draw(const Cell &cell_p, Canvas *canvas, int col_number, int row_number){
         canvas->fillRect(p1.x,p1.y,w,h);
     }
 
-    cell_p.forEach([&](const Wall& wall_p, WallP pos_p){
+    cell_p.forEachWall([&](const Wall& wall_p, WallP pos_p){
         ::draw(wall_p,canvas,w,h);
     });
 
