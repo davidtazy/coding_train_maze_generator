@@ -12,25 +12,46 @@ enum class WallP{Top=0,Left,Bottom,Right};
 struct Point{
     int x,y;
 };
-struct GridPosition{
-    int column;
-    int row;
-};
 
 struct GridSize{
     int column;
     int row;
 };
 
+struct GridPosition{
+    int column;
+    int row;
+
+    GridPosition LeftTo()const{
+        return {column-1,row};
+    }
+
+    GridPosition RightTo()const{
+        return {column+1,row};
+    }
+
+    GridPosition TopTo()const{
+        return {column,row-1};
+    }
+
+    GridPosition BottomTo()const{
+        return {column,row+1};
+    }
+
+    bool valid(GridSize size)const{
+        return (column >=0 && row >=0 && column < size.column && row < size.row);
+    }
+};
+
 struct Wall{
-    int col,row;
+    GridPosition position;
     WallP pos;
     int id;
     bool invalid{true};
     bool visible{true};
 
     Wall()=default;
-    Wall(int col,int row,WallP pos):col(col),row(row),pos(pos),invalid(false){
+    Wall(GridPosition position_p,WallP pos):position(position_p),pos(pos),invalid(false){
     }
 
     void setVisible(bool v){visible = v;}
@@ -47,15 +68,18 @@ struct Wall{
 std::vector<int> range(int begin,int end=-1);
 
 struct Cell{
-    int col,row;
+    GridPosition m_position;
     bool m_visited{false};
     bool m_current{false};
 
     std::array<Wall,4> m_walls;
 
-    Cell(int col_p,int row_p):col(col_p),row(row_p){
+    Cell(GridPosition position_p)
+        :m_position(position_p)
+    {
+
         for(int index:range(m_walls.size()) ){
-            m_walls.at(index) = Wall(col,row,static_cast<WallP>(index));
+            m_walls.at(index) = Wall(m_position,static_cast<WallP>(index));
         }
     }
 
@@ -72,9 +96,6 @@ struct Cell{
         }
     }
 
-    void forEachNeighbor(const std::vector<Cell>& grid,std::function<void(Cell&)> cb){
-
-    }
 
     void remove(WallP wall_p){
         m_walls.at(static_cast<int>(wall_p)).setVisible(false);
@@ -122,8 +143,11 @@ public:
     std::vector<Cell> make_grid()const{
         std::vector<Cell> grid;
         for(int i= 0;i< m_size.column;i++){
-            for(int j= 0;j< m_size.column;j++){
-                grid.emplace_back(i,j);
+            for(int j= 0;j< m_size.row;j++){
+                GridPosition pos;
+                pos.column = i;
+                pos.row = j;
+                grid.emplace_back(pos);
             }
         }
         return grid;
@@ -131,20 +155,31 @@ public:
 
     void forEach(std::function<void(const Cell&)> cb)const{
         for(const auto & cell:m_cells){
-             cb(cell);
+            cb(cell);
         }
     }
 
     void forEachNeighbor(const Cell& cell_p,std::function<void(Cell&)> cb){
-        for(auto & cell:m_cells){
-             cb(cell);
+
+        auto pos = cell_p.m_position;
+
+        for( auto neighbor:{pos.TopTo(),pos.LeftTo(),pos.BottomTo(),pos.RightTo()}){
+            if(neighbor.valid(m_size)){
+                cb(at(neighbor));
+            }
         }
+    }
+
+    Cell& at(GridPosition pos_p){
+        return m_cells.at(pos_p.column*m_size.column + pos_p.row);
     }
 };
 
+
+int random(int max);
+
 #include <stack>
 struct MazeGenerator{
-
 
     Grid m_grid;
     CurrentCell m_current;
@@ -156,6 +191,7 @@ public:
         :m_grid{size_p}
         ,m_current(m_grid.first())
     {
+        m_stack.push(m_grid.first());
     }
 
     const CurrentCell& current()const{return m_current;}
@@ -175,9 +211,11 @@ public:
 
     void step(){
 
-       auto neighbors = unvisitedNeighbors();
+        auto neighbors = unvisitedNeighbors();
+
         if( ! neighbors.empty()){
-            auto& next  = neighbors.front();
+            int random_neighbor = random(neighbors.size());
+            auto& next  = neighbors.at(random_neighbor);
             m_stack.push(next);
             m_current.set(next);
         }else if(m_stack.size()){

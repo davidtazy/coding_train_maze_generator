@@ -32,15 +32,15 @@ Point startPoint(const Wall &wall_p, int w, int h){
 
     if(wall_p.isTop() || wall_p.isLeft()){
         return{
-            wall_p.col*w,
-                    wall_p.row*h
+            wall_p.position.column*w,
+                    wall_p.position.row*h
         };
 
     }
     if(wall_p.isBottom() || wall_p.isRight()){
         return{
-            wall_p.col*w +w,
-                    wall_p.row*h +h};
+            wall_p.position.column*w +w,
+                    wall_p.position.row*h +h};
 
     }
 
@@ -50,14 +50,14 @@ Point startPoint(const Wall &wall_p, int w, int h){
 Point endPoint(const Wall &wall_p, int w, int h){
     if(wall_p.isTop() || wall_p.isRight()){
         return{
-            wall_p.col*w+w,
-                    wall_p.row*h};
+            wall_p.position.column*w+w,
+                   wall_p.position.row*h};
     }
 
     if(wall_p.isBottom() || wall_p.isLeft()){
         return{
-            wall_p.col*w ,
-                    wall_p.row*h +h};
+            wall_p.position.column*w ,
+                    wall_p.position.row*h +h};
 
     }
     throw std::runtime_error("endPoint - weird wall!!");
@@ -67,8 +67,8 @@ Point endPoint(const Wall &wall_p, int w, int h){
 
 Point startPoint(const Cell &cell_p, int w, int h){
     return{
-        cell_p.col*w,
-                cell_p.row*h
+        cell_p.m_position.column*w,
+                cell_p.m_position.row*h
     };
 }
 
