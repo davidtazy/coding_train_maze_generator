@@ -41,6 +41,10 @@ struct GridPosition{
     bool valid(GridSize size)const{
         return (column >=0 && row >=0 && column < size.column && row < size.row);
     }
+
+    bool operator ==(const GridPosition&other_p){
+        return column == other_p.column && row == other_p.row;
+    }
 };
 
 struct Wall{
@@ -173,6 +177,27 @@ public:
     Cell& at(GridPosition pos_p){
         return m_cells.at(pos_p.column*m_size.column + pos_p.row);
     }
+
+    void remove_walls_between(Cell& a, Cell& b){
+
+        if( a.m_position.TopTo() == b.m_position){
+
+            a.remove(WallP::Top);
+            b.remove(WallP::Bottom);
+
+        }else  if( a.m_position.BottomTo() == b.m_position){
+            a.remove(WallP::Bottom);
+            b.remove(WallP::Top);
+        }else  if( a.m_position.LeftTo() == b.m_position){
+            a.remove(WallP::Left);
+            b.remove(WallP::Right);
+        }else  if( a.m_position.RightTo() == b.m_position){
+            a.remove(WallP::Right);
+            b.remove(WallP::Left);
+        }else{
+            throw std::runtime_error("remove_walls_between(Cell& a, Cell& b) a and b are not neigbors");
+        }
+    }
 };
 
 
@@ -189,7 +214,7 @@ struct MazeGenerator{
 public:
     MazeGenerator(GridSize size_p)
         :m_grid{size_p}
-        ,m_current(m_grid.first())
+        ,m_current(m_grid.first()) // 1. make initial cell the current one
     {
         m_stack.push(m_grid.first());
     }
@@ -211,18 +236,23 @@ public:
 
     void step(){
 
+        //find unvisited neighbors
         auto neighbors = unvisitedNeighbors();
 
         if( ! neighbors.empty()){
             int random_neighbor = random(neighbors.size());
             auto& next  = neighbors.at(random_neighbor);
             m_stack.push(next);
+
+            m_grid.remove_walls_between(m_current.cell(),next);
+
             m_current.set(next);
         }else if(m_stack.size()){
             auto & previous = m_stack.top();
             m_stack.pop();
             m_current.set(previous);
         }else{
+
             m_finished = true;
         }
 
