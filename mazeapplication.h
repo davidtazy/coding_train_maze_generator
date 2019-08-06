@@ -17,10 +17,10 @@ void draw(const Cell& cell_p,Canvas* canvas,int col_number,int row_number);
 
 class MazeApplication:public Application
 {
-    const int row_number        = 100;
-    const int column_number     = 100;
+    const int row_number        = 20;
+    const int column_number     = 30;
     bool generate_before_show   = false;
-    const int speed_factor  = 100;
+    const int speed_factor  = 1;
 
     MazeGenerator generator;
 public:

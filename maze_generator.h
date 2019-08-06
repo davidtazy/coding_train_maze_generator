@@ -14,8 +14,8 @@ struct Point{
 };
 
 struct GridSize{
-    int column;
     int row;
+    int column;
 };
 
 struct GridPosition{
@@ -175,7 +175,8 @@ public:
     }
 
     Cell& at(GridPosition pos_p){
-        return m_cells.at(pos_p.column*m_size.column + pos_p.row);
+        const int id = pos_p.column*(m_size.row) + (pos_p.row);
+        return m_cells.at(id);
     }
 
     void remove_walls_between(Cell& a, Cell& b){

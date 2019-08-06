@@ -20,3 +20,12 @@ add_executable(${PROJECT_NAME}
     )
 
 target_link_libraries(${PROJECT_NAME} Qt5::Widgets)
+
+find_package(Qt5Test REQUIRED)
+add_executable(test_grid
+    test/test_grid.cpp
+    maze_generator.h
+    maze_generator.cpp
+    application.h)
+target_link_libraries(test_grid Qt5::Test)
+
