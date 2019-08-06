@@ -21,6 +21,8 @@ struct Canvas{
     virtual int width()const=0;
     virtual int height()const=0;
 
+    virtual void noLoop()=0;
+
 
 protected:
     virtual bool isDrawing()const=0;

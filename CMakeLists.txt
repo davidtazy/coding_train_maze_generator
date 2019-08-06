@@ -9,12 +9,14 @@ find_package(Qt5Widgets REQUIRED)
 
 add_executable(${PROJECT_NAME}
     main.cpp
-    mazelgenerator.h
-    mazelgenerator.cpp
+    maze_generator.h
+    maze_generator.cpp
     application.h
     application.cpp
     qtcanvas.h
     qtcanvas.cpp
+    mazeapplication.h
+    mazeapplication.cpp
     )
 
 target_link_libraries(${PROJECT_NAME} Qt5::Widgets)

@@ -74,6 +74,10 @@ public:
     {
         m_painter->fillRect(x,y,w,h,m_painter->brush());
     }
+
+    void noLoop()override{
+        timer.stop();
+    }
 };
 
 #endif // QTCANVAS_H

@@ -4,13 +4,13 @@
 
 
 
-#include "mazelgenerator.h"
+#include "mazeapplication.h"
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    MazeGenerator app;
+    MazeApplication app;
     QtCanvas canvas(&app);
 
 

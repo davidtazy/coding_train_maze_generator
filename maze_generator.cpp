@@ -1,4 +1,4 @@
-#include "mazelgenerator.h"
+#include "maze_generator.h"
 #include <algorithm>
 std::vector<int> range(int begin, int end){
     if(end <0){
@@ -12,3 +12,4 @@ std::vector<int> range(int begin, int end){
     });
     return ret;
 }
+
