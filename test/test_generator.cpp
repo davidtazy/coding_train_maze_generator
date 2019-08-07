@@ -44,4 +44,4 @@ private slots:
     }
 };
 QTEST_MAIN(testGrid)
-#include "test_grid.moc"
+#include "test_generator.moc"

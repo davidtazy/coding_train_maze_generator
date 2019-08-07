@@ -4,10 +4,10 @@
 #include <vector>
 #include <iostream>
 #include <functional>
-#include "application.h"
 
+
+//! position of the wall ref to its cellule
 enum class WallP{Top=0,Left,Bottom,Right};
-
 
 struct Point{
     int x,y;
@@ -59,7 +59,6 @@ struct Wall{
     }
 
     void setVisible(bool v){visible = v;}
-
 
     bool isTop()const{return pos== WallP::Top;}
     bool isBottom()const{return pos== WallP::Bottom;}

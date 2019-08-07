@@ -1,0 +1,7 @@
+/home/david/CppProjects/canvas/build/CMakeFiles/test.dir
+/home/david/CppProjects/canvas/build/CMakeFiles/canvas.dir
+/home/david/CppProjects/canvas/build/CMakeFiles/test_generator.dir
+/home/david/CppProjects/canvas/build/CMakeFiles/rebuild_cache.dir
+/home/david/CppProjects/canvas/build/CMakeFiles/edit_cache.dir
+/home/david/CppProjects/canvas/build/CMakeFiles/canvas_automoc.dir
+/home/david/CppProjects/canvas/build/CMakeFiles/test_generator_automoc.dir

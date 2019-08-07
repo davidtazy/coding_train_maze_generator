@@ -14,11 +14,16 @@ Point endPoint(const Wall& wall_p,int w,int h);
 void draw(const Wall& wall_p, Canvas*canvas,int w,int h);
 void draw(const Cell& cell_p,Canvas* canvas,int col_number,int row_number);
 
-
+///
+/// \brief The MazeApplication class show maze generation
+/// can be accelerated with @variable speed_factor
+/// can be generated offline then shown with @variable generate_before_show
+///
 class MazeApplication:public Application
 {
     const int row_number        = 20;
     const int column_number     = 30;
+
     bool generate_before_show   = false;
     const int speed_factor  = 1;
 

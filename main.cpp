@@ -13,7 +13,6 @@ int main(int argc, char *argv[])
     MazeApplication app;
     QtCanvas canvas(&app);
 
-
     canvas.show();
 
     return a.exec();

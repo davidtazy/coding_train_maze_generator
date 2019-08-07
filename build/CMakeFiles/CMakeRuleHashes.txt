@@ -1,0 +1,3 @@
+# Hashes of file build rules.
+4ae494820a77524c623bdd3da65e5df2 CMakeFiles/canvas_automoc
+04d530d228e67c799ab87e8ca51ee6a2 CMakeFiles/test_generator_automoc

@@ -3,7 +3,10 @@
 
 #include <stdexcept>
 
-
+///
+/// \brief The Canvas struct is minimale interface to a canvas
+/// allow to separate canvas usage to canvas implementation
+///
 struct Canvas{
     virtual ~Canvas()=default;
    // virtual void save()=0;
@@ -33,6 +36,10 @@ protected:
     }
 };
 
+
+///
+/// \brief The Application class is an interface to a drawing application
+///
 class Application{
 
 public:
