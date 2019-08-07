@@ -1,5 +1,9 @@
 # maze generator in C++
 
+inspired from ["coding train challenge"](https://thecodingtrain.com/CodingChallenges/010.1-maze-dfs-p5.html)
+
+use a canvas , a setup and a draw... but in C++
+
 ## application.h
 mimic p5.js application with a canvas as an interface
 
